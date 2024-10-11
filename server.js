@@ -9,40 +9,38 @@ const __dirname = dirname(__filename);
 const app = express();
 const db = new sqlite3.Database(join(__dirname, "data.sqlite"));
 
-app.get("/api/notices", (req, res) => {
-  const query = `
-    SELECT t.textID, t.text, u.userName, m.dateTime
-    FROM texts t
-    JOIN metaData m ON t.textID = m.textID
-    JOIN users u ON m.uid = u.uid
-    WHERE m.isNotice = TRUE;
-  `;
-
-  db.all(query, [], (err, rows) => {
-    if (err) {
-      res.status(500).json({ error: err.message });
-      return;
-    }
-    res.json(rows);
+const executeQuery = (query, params = []) => {
+  return new Promise((resolve, reject) => {
+    db.all(query, params, (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
   });
+};
+
+const handleApiResponse = (res, queryFunction) => {
+  queryFunction()
+    .then((data) => res.json(data))
+    .catch((err) => res.status(500).json({ error: err.message }));
+};
+
+const baseQuery = `
+  SELECT t.textID, t.text, u.userName, m.dateTime
+  FROM texts t
+  JOIN metaData m ON t.textID = m.textID
+  JOIN users u ON m.uid = u.uid
+  WHERE m.isNotice = ?;
+`;
+
+app.get("/api/notices", (req, res) => {
+  handleApiResponse(res, () => executeQuery(baseQuery, [true]));
 });
 
 app.get("/api/messages", (req, res) => {
-  const query = `
-      SELECT t.textID, t.text, u.userName, m.dateTime
-      FROM texts t
-      JOIN metaData m ON t.textID = m.textID
-      JOIN users u ON m.uid = u.uid
-      WHERE m.isNotice = FALSE;
-    `;
-
-  db.all(query, [], (err, rows) => {
-    if (err) {
-      res.status(500).json({ error: err.message });
-      return;
-    }
-    res.json(rows);
-  });
+  handleApiResponse(res, () => executeQuery(baseQuery, [false]));
 });
 
 const PORT = process.env.PORT || 3000;
