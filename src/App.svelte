@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import Notice from "./lib/Notice.svelte";
+  import Messenger from "./lib/Messenger.svelte";
 
   let notices = [];
 
@@ -23,14 +24,23 @@
 </script>
 
 <main>
-  <h1>Notices</h1>
-  {#each notices as notice}
-    <Notice
-      notice={{
-        text: notice.text,
-        user: notice.userName,
-        time: formatDate(notice.dateTime),
-      }}
-    />
-  {/each}
+  <div>
+    <h1>Notices</h1>
+    {#each notices as notice}
+      <Notice
+        notice={{
+          text: notice.text,
+          user: notice.userName,
+          time: formatDate(notice.dateTime),
+        }}
+      />
+    {/each}
+  </div>
+  <Messenger />
 </main>
+
+<style>
+  div {
+    display: inline-block;
+  }
+</style>

@@ -20,5 +20,6 @@
     background-color: #95d5b2;
     display: inline-block;
     padding: 12px 18px;
+    margin: auto 12px;
   }
 </style>
