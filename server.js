@@ -28,7 +28,7 @@ const handleApiResponse = (res, queryFunction) => {
 };
 
 const baseQuery = `
-  SELECT t.textID, t.text, u.userName, m.dateTime
+  SELECT t.textID, t.text, u.userName, m.dateTime, m.uid
   FROM texts t
   JOIN metaData m ON t.textID = m.textID
   JOIN users u ON m.uid = u.uid
