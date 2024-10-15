@@ -1,20 +1,38 @@
 <script>
-  import Messeges from "./Messeges.svelte";
+  import { onMount } from "svelte";
+  import Messeges from "./Messege.svelte";
+  let messeges = [];
+
+  onMount(async () => {
+    try {
+      const response = await fetch("/api/messages");
+      if (response.ok) {
+        messeges = await response.json();
+      } else {
+        console.error("Failed to fetch messeges");
+      }
+    } catch (error) {
+      console.error("Error fetching messeges:", error);
+    }
+    console.log(messeges);
+  });
 </script>
 
 <div>
   <h3>Messeges</h3>
-  <Messeges msg={"hey bro, whasssssuuuuuuuup"} />
+  {#each messeges as messege (messege.textID)}
+    <Messeges msg={messege} />
+  {/each}
 </div>
 
 <style>
   div {
     display: inline-block;
     min-height: 100vh;
-    width: 30em;
-    background-color: burlywood;
+    width: 25%;
+    background-color: #efc7e5;
     position: absolute;
     right: 0;
-    padding: 12px;
+    padding-left: 8px;
   }
 </style>
