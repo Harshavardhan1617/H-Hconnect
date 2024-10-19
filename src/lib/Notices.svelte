@@ -28,7 +28,7 @@
     <Notice
       notice={{
         text: notice.text,
-        user: notice.userName,
+        user: notice.username,
         time: formatDate(notice.dateTime),
       }}
     />
