@@ -3,10 +3,15 @@
   import Messenger from "./lib/Messenger.svelte";
   import Login from "./lib/Login.svelte";
   import { onMount } from "svelte";
+  import { setContext } from "svelte";
+  import { USER_CONTEXT_KEY } from "./lib/context.js";
+  import { writable } from "svelte/store";
 
   let isAuthenticated = false;
   let isLoading = true; // Add loading state
-  let user = null;
+
+  const userStore = writable(null);
+  setContext(USER_CONTEXT_KEY, { userStore });
 
   onMount(async () => {
     try {
@@ -14,7 +19,7 @@
       if (response.ok) {
         const data = await response.json();
         if (!data.error) {
-          user = data.username;
+          userStore.set(data);
           isAuthenticated = true;
         }
       }
@@ -26,8 +31,9 @@
   });
 
   function handleLogin(event) {
-    user = event.detail.username;
+    userStore.set(event.detail.userData);
     isAuthenticated = true;
+    console.log(userStore);
   }
 </script>
 

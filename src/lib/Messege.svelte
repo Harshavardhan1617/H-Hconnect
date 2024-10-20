@@ -1,12 +1,15 @@
 <script>
-  export let msg = {
-    text: "Hello",
-    uid: 1,
-  };
+  import { getContext } from "svelte";
+  import { USER_CONTEXT_KEY } from "./context.js";
+
+  export let msg;
+
+  const { userStore } = getContext(USER_CONTEXT_KEY);
+  $: userData = $userStore;
 </script>
 
 <div>
-  <div id={msg.uid === 1 ? "left" : "right"}>
+  <div id={msg.uid === userData.uid ? "right" : "left"}>
     <p>
       {msg.text}
     </p>

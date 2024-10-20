@@ -51,7 +51,7 @@
       }
 
       const data = await response.json();
-      dispatch("login", { username: username.toLowerCase() });
+      dispatch("login", { userData: data.user });
     } catch (error) {
       message = error.message;
     } finally {
