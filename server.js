@@ -155,12 +155,14 @@ app.post("/api/login", (req, res, next) => {
     }
     req.login(user, (err) => {
       if (err) return next(err);
-      return res.json({ success: true, user: { username: user.username } });
+      return res.json({
+        success: true,
+        user: { username: user.username, id: user.uid },
+      });
     });
   })(req, res, next);
 });
 
-// Add a logout route
 app.post("api/logout", function (req, res, next) {
   req.logout(function (err) {
     if (err) {
@@ -217,10 +219,10 @@ app.get("/api/profile", (req, res) => {
     res.status(401).json({
       error: "Authentication required",
     });
-  } else {
-    const user = req.user;
-    res.json(user);
+    return;
   }
+  const user = req.user;
+  res.json(user);
 });
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
