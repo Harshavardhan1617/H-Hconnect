@@ -28,7 +28,7 @@
     {/each}
   </div>
   <div class="input-area">
-    <Input />
+    <Input isNotice={false} />
   </div>
 </div>
 
