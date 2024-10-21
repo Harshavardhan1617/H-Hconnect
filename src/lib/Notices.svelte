@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import Notice from "./Notice.svelte";
+  import Input from "./Input.svelte";
 
   let notices = [];
 
@@ -22,7 +23,7 @@
   }
 </script>
 
-<div>
+<div class="notice-board">
   <h1>Notices</h1>
   {#each notices as notice (notice.textID)}
     <Notice
@@ -33,13 +34,23 @@
       }}
     />
   {/each}
+
+  <div class="input-area">
+    <Input isNotice={true} />
+  </div>
 </div>
 
 <style>
-  div {
+  .notice-board {
     display: inline-block;
     height: 100vh;
     width: 75%;
     padding-left: 8px;
+  }
+
+  .input-area {
+    position: absolute;
+    width: 60%;
+    bottom: 10px;
   }
 </style>

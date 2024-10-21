@@ -269,7 +269,7 @@ app.post("/api/insertText", isAuthenticated, (req, res) => {
     req.body.textBody.text,
     req.user.uid,
     now,
-    req.body.isNotice || false,
+    req.body.textBody.isNotice || false,
   ];
 
   executeInsert(null, params)
