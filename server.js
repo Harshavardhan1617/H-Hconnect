@@ -206,6 +206,82 @@ const baseQuery = `
   WHERE m.isNotice = ?;
 `;
 
+const executeInsert = (queries, params = []) => {
+  return new Promise((resolve, reject) => {
+    db.serialize(() => {
+      db.run("BEGIN TRANSACTION");
+
+      try {
+        //  insert into texts table
+        db.run(
+          "INSERT INTO texts (textID, text) VALUES (?, ?)",
+          [params[0], params[1]],
+          function (err) {
+            if (err) {
+              db.run("ROLLBACK");
+              reject(err);
+              return;
+            }
+
+            //  insert into metaData table
+            db.run(
+              "INSERT INTO metaData (textID, uid, dateTime, isNotice) VALUES (?, ?, ?, ?)",
+              [params[0], params[2], params[3], params[4]],
+              function (err) {
+                if (err) {
+                  db.run("ROLLBACK");
+                  reject(err);
+                  return;
+                }
+
+                db.run("COMMIT", (err) => {
+                  if (err) {
+                    db.run("ROLLBACK");
+                    reject(err);
+                    return;
+                  }
+                  resolve({
+                    success: true,
+                    textID: params[0],
+                  });
+                });
+              }
+            );
+          }
+        );
+      } catch (err) {
+        db.run("ROLLBACK");
+        reject(err);
+      }
+    });
+  });
+};
+
+app.post("/api/insertText", isAuthenticated, (req, res) => {
+  if (!req.body.textBody || !req.body.textBody.text) {
+    return res.status(400).json({ error: "Missing text content" });
+  }
+  console.log(req.body);
+  const textID = crypto.randomUUID();
+  const now = new Date().getTime();
+
+  const params = [
+    textID,
+    req.body.textBody.text,
+    req.user.uid,
+    now,
+    req.body.isNotice || false,
+  ];
+  console.log(params);
+
+  executeInsert(null, params)
+    .then((result) => res.json(result))
+    .catch((err) => {
+      console.error("Insert error:", err);
+      res.status(500).json({ error: err.message });
+    });
+});
+
 app.get("/api/notices", (req, res) => {
   handleApiResponse(res, () => executeQuery(baseQuery, [true]));
 });
