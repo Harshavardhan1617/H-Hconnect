@@ -157,7 +157,7 @@ app.post("/api/login", (req, res, next) => {
       if (err) return next(err);
       return res.json({
         success: true,
-        user: { username: user.username, id: user.uid },
+        user: { username: user.username, uid: user.uid },
       });
     });
   })(req, res, next);
