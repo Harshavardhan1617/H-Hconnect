@@ -8,46 +8,42 @@
   $: userData = $userStore;
 </script>
 
-<div>
-  <div id={msg.uid === userData.uid ? "right" : "left"}>
-    <p>
-      {msg.text}
-    </p>
-  </div>
+<div class="message-wrapper">
+  {#if userData}
+    <div class="message {msg.uid === userData.uid ? 'sent' : 'received'}">
+      <p>{msg.text}</p>
+    </div>
+  {/if}
 </div>
 
 <style>
-  div {
-    display: block;
+  .message-wrapper {
+    margin: 0.5rem 0;
+    display: flex;
+    width: 100%;
   }
 
-  #left {
-    display: inline-block;
-    min-height: 28px;
-    max-width: 300px;
-    border-radius: 16px;
-    padding: 5px 25px 5px 10px;
-    color: #000000;
-    background-color: #e0efda;
-    margin: 8px 4px;
+  .message {
+    max-width: 80%;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    word-break: break-word;
   }
 
-  #right {
-    display: inline-block;
-    min-height: 28px;
-    max-width: 300px;
-    border-radius: 16px;
-    padding: 5px 25px 5px 10px;
+  .sent {
+    margin-left: auto;
     background-color: #d782ba;
-    color: #000000;
-    margin: 8px 4px;
-    position: absolute;
-    right: 12px;
+    color: #000;
   }
 
-  div p {
-    transform: translateY(2px);
+  .received {
+    margin-right: auto;
+    background-color: #e0efda;
+    color: #000;
+  }
+
+  p {
     margin: 0;
-    padding: 0;
+    line-height: 1.4;
   }
 </style>
