@@ -261,7 +261,6 @@ app.post("/api/insertText", isAuthenticated, (req, res) => {
   if (!req.body.textBody || !req.body.textBody.text) {
     return res.status(400).json({ error: "Missing text content" });
   }
-  console.log(req.body);
   const textID = crypto.randomUUID();
   const now = new Date().getTime();
 
@@ -272,7 +271,6 @@ app.post("/api/insertText", isAuthenticated, (req, res) => {
     now,
     req.body.isNotice || false,
   ];
-  console.log(params);
 
   executeInsert(null, params)
     .then((result) => res.json(result))

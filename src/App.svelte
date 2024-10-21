@@ -5,12 +5,12 @@
   import { onMount } from "svelte";
   import { setContext } from "svelte";
   import { USER_CONTEXT_KEY } from "./lib/context.js";
-  import { writable } from "svelte/store";
+  import { get, writable } from "svelte/store";
 
   let isAuthenticated = false;
   let isLoading = true; // Add loading state
 
-  const userStore = writable(null);
+  let userStore = writable(null);
   setContext(USER_CONTEXT_KEY, { userStore });
 
   onMount(async () => {
@@ -21,6 +21,7 @@
         if (!data.error) {
           userStore.set(data);
           isAuthenticated = true;
+          console.log(get(userStore));
         }
       }
     } catch (error) {
@@ -33,7 +34,6 @@
   function handleLogin(event) {
     userStore.set(event.detail.userData);
     isAuthenticated = true;
-    console.log(userStore);
   }
 </script>
 
