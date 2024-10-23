@@ -16,41 +16,57 @@
     } catch (error) {
       console.error("Error fetching notices:", error);
     }
-    console.log(notices);
   });
+
   function formatDate(timestamp) {
     return new Date(timestamp).toLocaleString();
   }
 </script>
 
 <div class="notice-board">
-  <h1>Notices</h1>
-  {#each notices as notice (notice.textID)}
-    <Notice
-      notice={{
-        text: notice.text,
-        user: notice.username,
-        time: formatDate(notice.dateTime),
-      }}
-    />
-  {/each}
-
-  <div class="input-area">
+  <h1 class="board-title">Notices</h1>
+  <div class="notices-container">
+    {#each notices as notice (notice.textID)}
+      <Notice
+        notice={{
+          text: notice.text,
+          user: notice.username,
+          time: formatDate(notice.dateTime),
+        }}
+      />
+    {/each}
+  </div>
+  <div class="input-wrapper">
     <Input isNotice={true} />
   </div>
 </div>
 
 <style>
   .notice-board {
-    display: inline-block;
     height: 100vh;
     width: 75%;
-    padding-left: 8px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
   }
 
-  .input-area {
-    position: absolute;
-    width: 60%;
-    bottom: 10px;
+  .board-title {
+    font-size: 2rem;
+    color: #2d3748;
+    margin-bottom: 24px;
+  }
+
+  .notices-container {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 100px;
+  }
+
+  .input-wrapper {
+    position: fixed;
+    bottom: 24px;
+    width: 70%;
+    max-width: 800px;
   }
 </style>

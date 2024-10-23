@@ -1,37 +1,35 @@
 <script>
   import { onMount } from "svelte";
   import { getContext } from "svelte";
-  import Messeges from "./Messege.svelte";
+  import Message from "./Message.svelte";
   import Input from "./Input.svelte";
   import { USER_CONTEXT_KEY } from "./context.js";
-  import { get } from "svelte/store";
 
-  let messeges = [];
+  let messages = [];
   const { userStore } = getContext(USER_CONTEXT_KEY);
 
   onMount(async () => {
     try {
       const response = await fetch("/api/messages");
       if (response.ok) {
-        messeges = await response.json();
+        messages = await response.json();
       } else {
-        console.error("Failed to fetch messeges");
+        console.error("Failed to fetch messages");
       }
     } catch (error) {
-      console.error("Error fetching messeges:", error);
+      console.error("Error fetching messages:", error);
     }
   });
-  console.log($userStore);
 </script>
 
 <div class="messenger">
-  <div class="header">
+  <div class="messenger-header">
     <h3>Messages</h3>
   </div>
   <div class="messages-container">
-    {#if $userStore && messeges.length > 0}
-      {#each messeges as messege (messege.textID)}
-        <Messeges msg={messege} />
+    {#if $userStore && messages.length > 0}
+      {#each messages as message (message.textID)}
+        <Message msg={message} />
       {/each}
     {:else}
       <div class="loading-messages">
@@ -39,7 +37,7 @@
       </div>
     {/if}
   </div>
-  <div class="input-area">
+  <div class="messenger-input">
     <Input isNotice={false} />
   </div>
 </div>
@@ -56,25 +54,28 @@
     top: 0;
   }
 
-  .header {
-    padding: 1rem;
-    border-bottom: 1px solid #e0e0e0;
+  .messenger-header {
+    padding: 24px;
+    border-bottom: 1px solid rgba(114, 9, 183, 0.1);
+    background-color: white;
   }
 
-  .header h3 {
+  .messenger-header h3 {
     margin: 0;
-    color: #333;
+    color: #2d3748;
+    font-size: 1.5rem;
   }
 
   .messages-container {
     flex: 1;
     overflow-y: auto;
-    padding: 1rem;
+    padding: 16px;
   }
 
-  .input-area {
-    padding: 1rem;
-    border-top: 1px solid #e0e0e0;
+  .messenger-input {
+    padding: 16px;
+    border-top: 1px solid rgba(114, 9, 183, 0.1);
+    background-color: white;
   }
 
   .loading-messages {
@@ -82,6 +83,6 @@
     justify-content: center;
     align-items: center;
     height: 100%;
-    color: #666;
+    color: #718096;
   }
 </style>
