@@ -1,6 +1,8 @@
 <script>
-  import { getContext } from "svelte";
+  import { createEventDispatcher, getContext } from "svelte";
   import { USER_CONTEXT_KEY } from "./context";
+
+  const dispatch = createEventDispatcher();
 
   export let isNotice;
   const { userStore } = getContext(USER_CONTEXT_KEY);
@@ -31,6 +33,7 @@
     } finally {
       textBody.text = "";
     }
+    dispatch("send");
   };
 </script>
 
@@ -46,7 +49,6 @@
 
 <style>
   .input-container {
-    background-color: #fff;
     padding: 16px;
     border-radius: 12px;
     display: flex;

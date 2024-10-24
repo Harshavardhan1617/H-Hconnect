@@ -8,7 +8,7 @@
   let messages = [];
   const { userStore } = getContext(USER_CONTEXT_KEY);
 
-  onMount(async () => {
+  const fetchMessages = async () => {
     try {
       const response = await fetch("/api/messages");
       if (response.ok) {
@@ -19,7 +19,13 @@
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
-  });
+  };
+
+  onMount(fetchMessages);
+
+  function handleText(event) {
+    fetchMessages();
+  }
 </script>
 
 <div class="messenger">
@@ -38,7 +44,7 @@
     {/if}
   </div>
   <div class="messenger-input">
-    <Input isNotice={false} />
+    <Input isNotice={false} on:send={handleText} />
   </div>
 </div>
 
@@ -57,7 +63,6 @@
   .messenger-header {
     padding: 24px;
     border-bottom: 1px solid rgba(114, 9, 183, 0.1);
-    background-color: white;
   }
 
   .messenger-header h3 {
@@ -75,7 +80,6 @@
   .messenger-input {
     padding: 16px;
     border-top: 1px solid rgba(114, 9, 183, 0.1);
-    background-color: white;
   }
 
   .loading-messages {

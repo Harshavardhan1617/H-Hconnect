@@ -5,7 +5,7 @@
 
   let notices = [];
 
-  onMount(async () => {
+  const fetchNotices = async () => {
     try {
       const response = await fetch("/api/notices");
       if (response.ok) {
@@ -16,7 +16,13 @@
     } catch (error) {
       console.error("Error fetching notices:", error);
     }
-  });
+  };
+
+  onMount(fetchNotices);
+
+  function handleNotices(event) {
+    fetchNotices();
+  }
 
   function formatDate(timestamp) {
     return new Date(timestamp).toLocaleString();
@@ -39,7 +45,7 @@
     {/each}
   </div>
   <div class="input-wrapper">
-    <Input isNotice={true} />
+    <Input isNotice={true} on:send={fetchNotices} />
   </div>
 </div>
 
