@@ -31,6 +31,10 @@
     }
   });
 
+  function handleSignout() {
+    isAuthenticated = false;
+  }
+
   function handleLogin(event) {
     userStore.set(event.detail.userData);
     isAuthenticated = true;
@@ -45,7 +49,7 @@
     </div>
   {:else if isAuthenticated}
     <Notices />
-    <Messenger />
+    <Messenger on:signout={handleSignout} />
   {:else}
     <Login on:login={handleLogin} />
   {/if}

@@ -1,9 +1,10 @@
 <script>
-  import { onMount } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
   import { getContext } from "svelte";
   import Message from "./Message.svelte";
   import Input from "./Input.svelte";
   import { USER_CONTEXT_KEY } from "./context.js";
+  const dispatch = createEventDispatcher();
 
   let messages = [];
   const { userStore } = getContext(USER_CONTEXT_KEY);
@@ -21,6 +22,20 @@
     }
   };
 
+  async function handleLogout() {
+    const response = await fetch("/api/logout", {
+      method: "POST",
+    });
+    dispatch("signout");
+
+    if (!response.ok) {
+      console.error("Failed to logout:", response.statusText);
+      return;
+    }
+
+    // window.location.href = "/";
+  }
+
   onMount(fetchMessages);
 
   function handleText(event) {
@@ -31,6 +46,7 @@
 <div class="messenger">
   <div class="messenger-header">
     <h3>Messages</h3>
+    <button class="logout-button" on:click={handleLogout}></button>
   </div>
   <div class="messages-container">
     {#if $userStore && messages.length > 0}
@@ -61,6 +77,8 @@
   }
 
   .messenger-header {
+    display: flex;
+    justify-content: space-between;
     padding: 24px;
     border-bottom: 1px solid rgba(114, 9, 183, 0.1);
   }
@@ -88,5 +106,43 @@
     align-items: center;
     height: 100%;
     color: #718096;
+  }
+
+  .logout-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    background-color: transparent;
+    border: 1.5px solid #7209b7;
+    color: #7209b7;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .logout-button::before {
+    content: "Logout";
+  }
+
+  .logout-button:hover {
+    background-color: #7209b7;
+    color: white;
+    transform: translateY(-1px);
+  }
+
+  .logout-button:active {
+    transform: translateY(0px);
+  }
+
+  @media (max-width: 768px) {
+    .logout-button {
+      padding: 6px 12px;
+      font-size: 13px;
+    }
   }
 </style>

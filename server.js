@@ -163,7 +163,7 @@ app.post("/api/login", (req, res, next) => {
   })(req, res, next);
 });
 
-app.post("api/logout", function (req, res, next) {
+app.post("/api/logout", function (req, res, next) {
   req.logout(function (err) {
     if (err) {
       return next(err);
