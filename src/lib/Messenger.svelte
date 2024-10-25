@@ -109,6 +109,10 @@ $: if (messages.length > 0) {
     padding: 16px;
   }
 
+  .messages-container::-webkit-scrollbar {
+    display: none;
+  }
+
   .messenger-input {
     padding: 16px;
     border-top: 1px solid rgba(114, 9, 183, 0.1);

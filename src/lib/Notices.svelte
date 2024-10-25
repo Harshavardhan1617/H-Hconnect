@@ -89,12 +89,11 @@
     overflow-y: auto;
     padding-bottom: 80px;
     align-items: start;
-    scrollbar-width: thin;
-    scrollbar-color: #7209b7 #f0f0f0;
   }
 
   .notices-grid::-webkit-scrollbar {
     width: 6px;
+    display: none;
   }
 
   .notices-grid::-webkit-scrollbar-track {
