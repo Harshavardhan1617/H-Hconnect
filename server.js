@@ -6,6 +6,7 @@ import session from "express-session";
 import passport from "passport";
 import LocalStrategy from "passport-local";
 import crypto from "crypto";
+import fs from "node:fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -313,14 +314,24 @@ app.get("/api/messages", (req, res) => {
 });
 
 app.get("/api/profile", (req, res) => {
-  if (!req.isAuthenticated()) {
-    res.status(401).json({
-      error: "Authentication required",
-    });
-    return;
-  }
-  const user = req.user;
-  res.json(user);
+  db.all("SELECT * FROM users", (err, rows) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Internal Server Error");
+      return;
+    }
+    if (rows.length === 0 || rows.length < 2) {
+      res.json({ status: "register" });
+    } else {
+      if (!req.isAuthenticated()) {
+        res.status(401).json({
+          error: "Authentication required",
+        });
+        return;
+      }
+      res.json(req.user);
+    }
+  });
 });
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

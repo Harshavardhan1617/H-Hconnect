@@ -8,6 +8,7 @@
   import { get, writable } from "svelte/store";
 
   let isAuthenticated = false;
+  export let isRegister = false;
   let isLoading = true; // Add loading state
 
   let userStore = writable(null);
@@ -18,10 +19,13 @@
       const response = await fetch("/api/profile");
       if (response.ok) {
         const data = await response.json();
-        if (!data.error) {
+        if (!data.error && data.status != "register") {
           userStore.set(data);
           isAuthenticated = true;
           console.log(get(userStore));
+        }
+        if (data.status === "register") {
+          isRegister = true;
         }
       }
     } catch (error) {
@@ -51,7 +55,7 @@
     <Notices />
     <Messenger on:signout={handleSignout} />
   {:else}
-    <Login on:login={handleLogin} />
+    <Login on:login={handleLogin} isRegister = {isRegister? true : false} />
   {/if}
 </main>
 

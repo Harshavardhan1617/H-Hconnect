@@ -10,6 +10,7 @@
   let flatpickrInstance;
   let isLoading = false;
   let message = "";
+  export let isRegister = false;
 
   onMount(() => {
     flatpickrInstance = flatpickr(datePickerElement, {
@@ -35,7 +36,8 @@
         throw new Error("Please fill in all fields");
       }
 
-      const response = await fetch("/api/login", {
+      const response = await fetch(`/api/${isRegister ? 'register' : 'login'}`,
+      {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -68,7 +70,7 @@
 </svelte:head>
 
 <div class="form-container">
-  <h2>Login</h2>
+  <h2>{isRegister? 'Register' : 'Login'}</h2>
 
   <form on:submit|preventDefault={handleSubmit}>
     <div class="form-group">
@@ -94,7 +96,7 @@
     </div>
 
     <button type="submit" disabled={isLoading}>
-      {isLoading ? "Logging in..." : "Login"}
+      {isLoading ? "Logging in..." : (isRegister ? 'Register' : 'Login')}
     </button>
 
     {#if message}
