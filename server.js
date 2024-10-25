@@ -31,7 +31,31 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-const db = new sqlite3.Database(join(__dirname, "data.sqlite"));
+const db = new sqlite3.Database(join(__dirname, "data.sqlite"), (err) => {
+  if (err) {
+    return console.error(err.message);
+  }
+  db.get(
+    "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('users', 'texts', 'metadata');",
+    (err, row) => {
+      if (err) {
+        return console.error(err.message);
+      }
+      if (!row) {
+        console.log("db is empty");
+        const sql = fs.readFileSync("load.sql").toString();
+        db.exec(sql, (err) => {
+          if (err) {
+            return console.error(err.message);
+          }
+          console.log("SQL file loaded successfully.");
+        });
+      } else {
+        console.log("Database already contains data, skipping SQL loading.");
+      }
+    }
+  );
+});
 
 // Promisified password hashing
 function hashPassword(password, salt) {
