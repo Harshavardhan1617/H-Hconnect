@@ -14,6 +14,7 @@
       const response = await fetch("/api/messages");
       if (response.ok) {
         messages = await response.json();
+        scrollToBottom()
       } else {
         console.error("Failed to fetch messages");
       }
@@ -41,6 +42,19 @@
   function handleText(event) {
     fetchMessages();
   }
+
+  let messagesContainer;
+
+  function scrollToBottom() {
+  if (messagesContainer) {
+    setTimeout(() => {
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }, 0);
+  }
+}
+$: if (messages.length > 0) {
+  scrollToBottom();
+}
 </script>
 
 <div class="messenger">
@@ -48,7 +62,7 @@
     <h3>Messages</h3>
     <button class="logout-button" on:click={handleLogout}></button>
   </div>
-  <div class="messages-container">
+  <div class="messages-container"  bind:this={messagesContainer}>
     {#if $userStore && messages.length > 0}
       {#each messages as message (message.textID)}
         <Message msg={message} />

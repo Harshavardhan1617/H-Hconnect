@@ -4,12 +4,25 @@
   import Input from "./Input.svelte";
 
   let notices = [];
+  let noticeBoard;
+  function scrollToBottom() {
+    if (noticeBoard) {
+      setTimeout(() => {
+        noticeBoard.scrollTop = noticeBoard.scrollHeight;
+      }, 0);
+    }
+  }
+
+  $: if (notices.length > 0) {
+    scrollToBottom();
+  }
 
   const fetchNotices = async () => {
     try {
       const response = await fetch("/api/notices");
       if (response.ok) {
         notices = await response.json();
+        scrollToBottom()
       } else {
         console.error("Failed to fetch notices");
       }
@@ -31,7 +44,7 @@
 
 <div class="notice-board">
   <h1 class="board-title">Notices</h1>
-  <div class="notices-grid">
+  <div class="notices-grid" bind:this={noticeBoard}>
     {#each notices as notice (notice.textID)}
       <div class="notice-wrapper" class:large={notice.text.length > 100}>
         <Notice
