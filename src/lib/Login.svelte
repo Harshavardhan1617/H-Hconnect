@@ -85,12 +85,12 @@
     </div>
 
     <div class="form-group">
-      <label for="date">Select Date and Time:</label>
+      <label for="date">Select Date of birth:</label>
       <input
         type="text"
         id="date"
         bind:this={datePickerElement}
-        placeholder="Select date and time"
+        placeholder="Select date of birth"
         required
       />
     </div>
