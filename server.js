@@ -313,6 +313,37 @@ app.get("/api/messages", (req, res) => {
   handleApiResponse(res, () => executeQuery(baseQuery, [false]));
 });
 
+app.get("/api/lastSeen", (req, res) => {
+  const { uid, timeStamp } = req.body;
+
+  const sql = `
+    UPDATE lastSeen
+    SET timeStamp = ?
+    WHERE uid = ?
+  `;
+
+  db.run(sql, [timeStamp, uid], (err) => {
+    if (err) {
+      return next(err);
+    }
+
+    if (this.changes === 0) {
+      db.run(
+        "INSERT INTO lastSeen (uid, timeStamp) VALUES (?, ?)",
+        [uid, timeStamp],
+        (insertErr) => {
+          if (insertErr) {
+            return next(insertErr);
+          }
+          res.sendStatus(201);
+        }
+      );
+    } else {
+      res.sendStatus(200);
+    }
+  });
+});
+
 app.get("/api/profile", (req, res) => {
   db.all("SELECT * FROM users", (err, rows) => {
     if (err) {
