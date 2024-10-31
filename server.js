@@ -37,7 +37,7 @@ const db = new sqlite3.Database(join(__dirname, "data.sqlite"), (err) => {
     return console.error(err.message);
   }
   db.get(
-    "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('users', 'texts', 'metadata');",
+    "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('users', 'texts', 'metadata', 'lastSeen');",
     (err, row) => {
       if (err) {
         return console.error(err.message);

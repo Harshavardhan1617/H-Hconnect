@@ -19,6 +19,12 @@ CREATE TABLE metaData (
     FOREIGN KEY (uid) REFERENCES users(uid)
 );
 
+CREATE TABLE lastSeen (
+    uid INT,
+    timeStamp BIGINT,
+    FOREIGN KEY (uid) REFERENCES users(uid)
+);
+
 
 INSERT INTO texts (textID, text)
 VALUES
@@ -33,3 +39,8 @@ VALUES
     (2, 1, 1729847102000, TRUE),
     (3, 2, 1729847103000, FALSE),
     (4, 2, 1729847104000, TRUE);
+
+INSERT INTO lastSeen (uid, timeStamp)
+VALUES 
+    (1, 1729847101000),
+    (2, 1729847103000);
