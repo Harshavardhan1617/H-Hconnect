@@ -4,10 +4,13 @@
   import Message from "./Message.svelte";
   import Input from "./Input.svelte";
   import { USER_CONTEXT_KEY } from "./context.js";
+  import LastSeen from "./LastSeen.svelte";
   const dispatch = createEventDispatcher();
 
   let messages = [];
+  let lastSeen;
   const { userStore } = getContext(USER_CONTEXT_KEY);
+
 
   const fetchMessages = async () => {
     try {
@@ -22,6 +25,7 @@
       console.error("Error fetching messages:", error);
     }
   };
+
 
   async function handleLogout() {
     const response = await fetch("/api/logout", {
@@ -59,7 +63,10 @@ $: if (messages.length > 0) {
 
 <div class="messenger">
   <div class="messenger-header">
-    <h3>Messages</h3>
+    <div class="messenger-header-user">
+      <h3>{$userStore.username}</h3>
+      <LastSeen />
+    </div>
     <button class="logout-button" on:click={handleLogout}></button>
   </div>
   <div class="messages-container"  bind:this={messagesContainer}>
