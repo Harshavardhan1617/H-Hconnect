@@ -22,7 +22,7 @@
         if (!data.error && data.status != "register") {
           userStore.set(data);
           isAuthenticated = true;
-          console.log(get(userStore));
+          console.log($userStore);
         }
         if (data.status === "register") {
           isRegister = true;

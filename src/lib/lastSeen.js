@@ -1,8 +1,8 @@
-const updateLastseen = async (uid) => {
+export const updateLastseen = async (uid) => {
   const date = new Date();
   const timeStamp = date.valueOf();
   try {
-    const response = await fetch("/api/lastSeen", {
+    const response = await fetch("/api/updateLastSeen", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
