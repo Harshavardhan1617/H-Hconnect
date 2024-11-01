@@ -64,7 +64,7 @@ $: if (messages.length > 0) {
 <div class="messenger">
   <div class="messenger-header">
     <div class="messenger-header-user">
-      <h3>{$userStore.username}</h3>
+      <h3>{$userStore.otherUser}</h3>
       <LastSeen />
     </div>
     <button class="logout-button" on:click={handleLogout}></button>

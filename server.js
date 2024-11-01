@@ -180,10 +180,23 @@ app.post("/api/login", (req, res, next) => {
     }
     req.login(user, (err) => {
       if (err) return next(err);
-      return res.json({
-        success: true,
-        user: { username: user.username, uid: user.uid },
-      });
+      db.get(
+        "SELECT * FROM users WHERE users.uid <> ?",
+        [user.uid],
+        (err, row) => {
+          if (err) return new Error(err);
+          if (row) {
+            return res.json({
+              success: true,
+              user: {
+                username: user.username,
+                uid: user.uid,
+                otherUser: row.username,
+              },
+            });
+          }
+        }
+      );
     });
   })(req, res, next);
 });
