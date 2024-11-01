@@ -401,7 +401,12 @@ app.get("/api/profile", (req, res) => {
         });
         return;
       }
-      res.json(req.user);
+      const otherUser = rows.find((el) => el.uid !== req.user.uid);
+      res.json({
+        uid: req.user.uid,
+        username: req.user.username,
+        otherUser: otherUser.username,
+      });
     }
   });
 });
