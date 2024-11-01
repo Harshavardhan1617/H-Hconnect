@@ -313,8 +313,9 @@ app.get("/api/messages", (req, res) => {
   handleApiResponse(res, () => executeQuery(baseQuery, [false]));
 });
 
-app.get("/api/lastSeen", (req, res) => {
+app.post("/api/updateLastSeen", (req, res) => {
   const { uid, timeStamp } = req.body;
+  console.log("received lastseen update", uid, timeStamp);
 
   const sql = `
     UPDATE lastSeen
@@ -322,9 +323,9 @@ app.get("/api/lastSeen", (req, res) => {
     WHERE uid = ?
   `;
 
-  db.run(sql, [timeStamp, uid], (err) => {
+  db.run(sql, [timeStamp, uid], function (err) {
     if (err) {
-      return next(err);
+      return res.status(500).json({ error: err.message });
     }
 
     if (this.changes === 0) {
@@ -333,7 +334,7 @@ app.get("/api/lastSeen", (req, res) => {
         [uid, timeStamp],
         (insertErr) => {
           if (insertErr) {
-            return next(insertErr);
+            return res.status(500).json({ error: insertErr.message });
           }
           res.sendStatus(201);
         }
