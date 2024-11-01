@@ -1,0 +1,5 @@
+6. show only messanger in mobile view and a button to toggle b/w messanger and notice board
+3. add datetime prior to message clusters
+4. feat: edit and delete for messages and notices
+5. improve UI
+7. center input field for notices
