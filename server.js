@@ -345,6 +345,33 @@ app.post("/api/updateLastSeen", (req, res) => {
   });
 });
 
+app.get("/api/getLastSeen", (req, res) => {
+  if (!req.isAuthenticated()) {
+    res.status(401).json({
+      error: "Authentication required",
+    });
+    return;
+  }
+
+  const query = `
+    SELECT u.uid, u.username, ls.timestamp AS lastseen
+    FROM users u
+    INNER JOIN lastSeen ls ON u.uid = ls.uid
+    WHERE u.uid <> ?;
+  `;
+
+  db.get(query, [req.user.uid], (err, row) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).json({ error: "Internal Server Error" });
+    } else if (!row) {
+      res.json({ lastseen: null });
+    } else {
+      res.json(row);
+    }
+  });
+});
+
 app.get("/api/profile", (req, res) => {
   db.all("SELECT * FROM users", (err, rows) => {
     if (err) {
